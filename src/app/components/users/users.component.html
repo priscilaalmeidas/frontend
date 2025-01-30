@@ -1,0 +1,39 @@
+<div>
+  <h1>Gerenciamento de Usuários</h1>
+
+  <ul class="d-flex justify-content-around w-50 mb-2">
+    <li>
+      <a (click)="setSection('add')">
+        <img src="assets/add-user.png" alt="Adicionar Usuário" />
+      </a>
+    </li>
+    <li>
+      <a (click)="setSection('edit')">
+        <img src="assets/edit-user.png" alt="Editar Usuário" />
+      </a>
+    </li>
+    <li>
+      <a (click)="setSection('remove')">
+        <img src="assets/remove-user.png" alt="Remover Usuário" />
+      </a>
+    </li>
+  </ul>
+
+  <!-- Seção de Adicionar Usuário -->
+  <div *ngIf="currentSection === 'add'">
+    <h2>Adicionar Usuário</h2>
+    <!-- Conteúdo da seção de adicionar usuário -->
+  </div>
+
+  <!-- Seção de Editar Usuário -->
+  <div *ngIf="currentSection === 'edit'">
+    <h2>Editar Usuário</h2>
+    <!-- Conteúdo da seção de editar usuário -->
+  </div>
+
+  <!-- Seção de Remover Usuário -->
+  <div *ngIf="currentSection === 'remove'">
+    <h2>Remover Usuário</h2>
+    <!-- Conteúdo da seção de remover usuário -->
+  </div>
+</div>

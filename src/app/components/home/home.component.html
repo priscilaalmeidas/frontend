@@ -1,0 +1,124 @@
+<main class="d-flex h-100">
+  <button class="menu-toggle d-md-none" (click)="toggleMenu()">☰</button>
+
+  <aside
+    [class.open]="menuOpen"
+    class="d-flex flex-column justify-content-between p-2"
+  >
+    <section id="user-info" class="d-flex p-2">
+      <div id="user" class="avatar">PA</div>
+      <div class="user-details">
+        <div class="name">Priscila Almeida</div>
+        <div class="role">Atendente</div>
+      </div>
+    </section>
+    <nav id="menu" class="mb-2">
+      <h6>Administração</h6>
+      <ul class="d-flex justify-content-around w-50 mb-2">
+        <!-- <li>
+          <a [routerLink]="['/users']" (click)="setSection('add')">
+            <img src="assets/add-user.png" alt="Adicionar Usuário" />
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/users']" (click)="setSection('edit')">
+            <img src="assets/edit-user.png" alt="Editar Usuário" />
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/users']" (click)="setSection('remove')">
+            <img src="assets/remove-user.png" alt="Remover Usuário" />
+          </a>
+        </li> -->
+      </ul>
+
+      <h6>Canais</h6>
+      <ul class="d-flex justify-content-around w-50">
+        <!-- Fazer v-for de itens registrados no banco -->
+        <li>
+          <img src="assets/whatsapp.png" alt="WhatsApp" />
+        </li>
+        <li>
+          <img src="assets/telegram.png" alt="Telegram" />
+        </li>
+        <li>
+          <img src="assets/web-chat.png" alt="WebChat" />
+        </li>
+      </ul>
+    </nav>
+    <section id="inProgress">
+      <h6>Atendimentos em Andamento</h6>
+      <div class="chat-list">
+        <div class="chat-item">
+          <div class="avatar">JD</div>
+          <div class="chat-details">
+            <div class="name">
+              João da Silva
+              <span class="duration" title="Duração">• 10 min</span>
+            </div>
+            <div class="last-message">"Preciso de ajuda com meu pedido..."</div>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="avatar">AM</div>
+          <div class="chat-details">
+            <div class="name">
+              Ana Martins <span class="duration">• 5 min</span>
+            </div>
+            <div class="last-message">"Muito obrigado pelo suporte!"</div>
+          </div>
+        </div>
+        <div class="chat-item">
+          <div class="avatar">RP</div>
+          <div class="chat-details">
+            <div class="name">
+              Ricardo Pereira <span class="duration">• 15 min</span>
+            </div>
+            <div class="last-message">"Ainda não recebi a confirmação..."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="history">
+      <h6>Histórico de Atendimentos</h6>
+      <div class="history-list">
+        <div class="history-item">
+          <div class="history-details">
+            <div class="name">
+              Lucas Almeida
+              <span class="duration" title="Duração">• 20 min</span>
+            </div>
+            <div class="source" title="Origem">
+              <img src="assets/whatsapp.png" alt="WhatsApp" />
+            </div>
+          </div>
+        </div>
+        <div class="history-item">
+          <div class="history-details">
+            <div class="name">
+              Carla Figueiredo
+              <span class="duration" title="Duração">• 12 min</span>
+            </div>
+            <div class="source" title="Origem">
+              <img src="assets/telegram.png" alt="Telegram" />
+            </div>
+          </div>
+        </div>
+        <div class="history-item">
+          <div class="history-details">
+            <div class="name">
+              Marcelo Vieira
+              <span class="duration" title="Duração">• 8 min</span>
+            </div>
+            <div class="source" title="Origem">
+              <img src="assets/web-chat.png" alt="Web Chat" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </aside>
+  <section class="d-flex flex-column w-100">
+    <app-chat></app-chat>
+  </section>
+</main>

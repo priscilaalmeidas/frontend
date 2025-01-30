@@ -1,0 +1,52 @@
+<div class="chat-container">
+  <header class="d-flex justify-content-between p-2">
+    <div id="client-info" class="d-flex align-items-center w-75">
+      <div class="avatar">JD</div>
+      <div class="d-flex flex-column w-100">
+        <div class="name m-1">
+          João da Silva
+          <img
+            src="assets/pencil.png"
+            alt="Editar"
+            style="width: 15px; height: 15px"
+          />
+        </div>
+        <div class="user-details d-flex flex-wrap justify-content-between">
+          <div class="role">Cliente</div>
+          <div>Telefone: (11) 9999-9999</div>
+          <div>E-mail: joaodasilvaemail.com</div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-25 justify-content-end">
+      <div class="status m-1">Em atendimento</div>
+      <div class="source m-1">
+        <img src="assets/whatsapp.png" alt="WhatsApp" />
+      </div>
+    </div>
+  </header>
+  <div class="chat-box" #chatBox>
+    <div
+      *ngFor="let msg of messages"
+      [ngClass]="{
+        received: msg.type === 'received',
+        sent: msg.type === 'sent'
+      }"
+    >
+      {{ msg.text }}
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input
+      [(ngModel)]="newMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Digite sua mensagem..."
+    />
+    <button (click)="sendMessage()">Enviar</button>
+    <!-- (click)="endChat()" -->
+  </div>
+  <div class="chat-input border-0 d-flex justify-content-end">
+    <a class="btn btn-outline-danger">Encerrar atendimento</a>
+  </div>
+</div>

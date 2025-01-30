@@ -1,0 +1,36 @@
+<body
+  class="container d-flex flex-column align-items-center justify-content-center"
+>
+  <div class="stars-background"></div>
+  <section class="bg-light border rounded">
+    <img
+      src="assets/logo-positivo-s.svg"
+      alt="Logo Positivo S+"
+      class="mb-4"
+      style="width: 250px; height: auto"
+    />
+    <h3>Seja bem-vindo(a)!</h3>
+    <p>Faça o login para acessar o sistema.</p>
+    <form class="d-flex flex-column align-items-center">
+      <input
+        class="border rounded m-2 p-1 col-12"
+        type="text"
+        placeholder="Usuário"
+        name="username"
+        [(ngModel)]="username"
+      />
+      <input
+        class="border rounded mt-1 mb-2 p-1 col-12"
+        type="password"
+        placeholder="Senha"
+        name="password"
+        [(ngModel)]="password"
+      />
+
+      <p class="text-danger" *ngIf="loginFailed">Usuário ou senha inválidos.</p>
+      <div class="col-12 mx-auto">
+        <button class="w-100" type="button" (click)="login()">Entrar</button>
+      </div>
+    </form>
+  </section>
+</body>
