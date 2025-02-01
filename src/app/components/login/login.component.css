@@ -10,3 +10,7 @@ button {
 section {
   padding: 50px;
 }
+
+body {
+  background-color: var(--background-light-color);
+}

@@ -1,7 +1,4 @@
-<body
-  class="container d-flex flex-column align-items-center justify-content-center"
->
-  <div class="stars-background"></div>
+<body class="d-flex flex-column align-items-center justify-content-center">
   <section class="bg-light border rounded">
     <img
       src="assets/logo-positivo-s.svg"
@@ -15,9 +12,9 @@
       <input
         class="border rounded m-2 p-1 col-12"
         type="text"
-        placeholder="Usuário"
-        name="username"
-        [(ngModel)]="username"
+        placeholder="E-mail"
+        name="email"
+        [(ngModel)]="email"
       />
       <input
         class="border rounded mt-1 mb-2 p-1 col-12"
@@ -27,7 +24,7 @@
         [(ngModel)]="password"
       />
 
-      <p class="text-danger" *ngIf="loginFailed">Usuário ou senha inválidos.</p>
+      <p class="text-danger" *ngIf="loginFailed">E-mail ou senha inválidos.</p>
       <div class="col-12 mx-auto">
         <button class="w-100" type="button" (click)="login()">Entrar</button>
       </div>

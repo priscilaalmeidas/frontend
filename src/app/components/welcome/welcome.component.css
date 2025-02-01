@@ -1,0 +1,13 @@
+.centered-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ocupa a tela toda */
+  background-color: var(--background-light-color);
+}
+
+.centered-image img {
+  max-width: 80%; /* Ajusta a imagem para não ficar muito grande */
+  height: auto;
+}

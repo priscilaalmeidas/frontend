@@ -1,37 +1,46 @@
 <main class="d-flex h-100">
   <button class="menu-toggle d-md-none" (click)="toggleMenu()">☰</button>
 
-  <aside
-    [class.open]="menuOpen"
-    class="d-flex flex-column justify-content-between p-2"
-  >
+  <aside [class.open]="menuOpen" class="d-flex flex-column">
     <section id="user-info" class="d-flex p-2">
-      <div id="user" class="avatar">PA</div>
-      <div class="user-details">
-        <div class="name">Priscila Almeida</div>
-        <div class="role">Atendente</div>
+      <div class="mix d-flex align-items-center">
+        <div id="user" class="avatar">{{ getUserInitials(user?.name) }}</div>
+        <div class="user-details">
+          <div class="name text-capitalize">{{ user?.name }}</div>
+          <div class="role text-capitalize">{{ user?.role }}</div>
+        </div>
       </div>
+      <button class="logout" (click)="logout()">
+        <img src="assets/logout.png" title="Sair" alt="Sair" />
+      </button>
     </section>
     <nav id="menu" class="mb-2">
-      <h6>Administração</h6>
-      <ul class="d-flex justify-content-around w-50 mb-2">
-        <!-- <li>
-          <a [routerLink]="['/users']" (click)="setSection('add')">
-            <img src="assets/add-user.png" alt="Adicionar Usuário" />
-          </a>
-        </li>
-        <li>
-          <a [routerLink]="['/users']" (click)="setSection('edit')">
-            <img src="assets/edit-user.png" alt="Editar Usuário" />
-          </a>
-        </li>
-        <li>
-          <a [routerLink]="['/users']" (click)="setSection('remove')">
-            <img src="assets/remove-user.png" alt="Remover Usuário" />
-          </a>
-        </li> -->
-      </ul>
-
+      @if(user?.role == 'gestor'){
+      <h6 class="mt-4">Gerenciamento de Usuários</h6>
+      <div class="nav d-flex flex-column mb-4">
+        <button
+          type="button"
+          class="align-items-center d-flex justify-content-start"
+          (click)="openForm('add')"
+          aria-label="Adicionar Usuário"
+        >
+          <img src="assets/add-user.png" alt="Adicionar Usuário" />
+          <span class="m-3 text-black">Adicionar Usuário</span>
+        </button>
+        <button
+          type="button"
+          class="align-items-center d-flex justify-content-start"
+          (click)="openForm('edit')"
+          aria-label="Editar Usuário"
+        >
+          <img src="assets/edit-user.png" alt="Editar Usuário" />
+          <span class="m-3 text-black">Editar Usuário</span>
+        </button>
+        <!-- <button type="button" aria-label="Remover Usuário">
+          <img src="assets/remove-user.png" alt="Remover Usuário" />
+        </button> -->
+      </div>
+      }@else{
       <h6>Canais</h6>
       <ul class="d-flex justify-content-around w-50">
         <!-- Fazer v-for de itens registrados no banco -->
@@ -45,36 +54,28 @@
           <img src="assets/web-chat.png" alt="WebChat" />
         </li>
       </ul>
+      }
     </nav>
+    @if(user?.role == 'atendente'){
     <section id="inProgress">
       <h6>Atendimentos em Andamento</h6>
       <div class="chat-list">
-        <div class="chat-item">
-          <div class="avatar">JD</div>
+        <div
+          class="chat-item"
+          *ngFor="let ticket of this.ticketsByAgent"
+          (click)="openChat()"
+          tabindex="0"
+          role="button"
+        >
+          <div class="avatar">{{ getUserInitials(ticket?.contact?.name) }}</div>
           <div class="chat-details">
             <div class="name">
-              João da Silva
-              <span class="duration" title="Duração">• 10 min</span>
+              {{ ticket.contact.name }}
+              <span class="duration" title="Duração"
+                >• {{ ticket.duration }}</span
+              >
             </div>
-            <div class="last-message">"Preciso de ajuda com meu pedido..."</div>
-          </div>
-        </div>
-        <div class="chat-item">
-          <div class="avatar">AM</div>
-          <div class="chat-details">
-            <div class="name">
-              Ana Martins <span class="duration">• 5 min</span>
-            </div>
-            <div class="last-message">"Muito obrigado pelo suporte!"</div>
-          </div>
-        </div>
-        <div class="chat-item">
-          <div class="avatar">RP</div>
-          <div class="chat-details">
-            <div class="name">
-              Ricardo Pereira <span class="duration">• 15 min</span>
-            </div>
-            <div class="last-message">"Ainda não recebi a confirmação..."</div>
+            <div class="last-message">{{ ticket.lastMessage }}</div>
           </div>
         </div>
       </div>
@@ -117,8 +118,16 @@
         </div>
       </div>
     </section>
+    }
   </aside>
   <section class="d-flex flex-column w-100">
-    <app-chat></app-chat>
+    <app-user-form
+      [typeForm]="typeForm"
+      *ngIf="!contact.id && typeForm"
+    ></app-user-form>
+    <app-chat *ngIf="contact.id && !typeForm"></app-chat>
+    <app-welcome
+      *ngIf="!(contact.id && !typeForm) && !(typeForm && !contact.id)"
+    ></app-welcome>
   </section>
 </main>

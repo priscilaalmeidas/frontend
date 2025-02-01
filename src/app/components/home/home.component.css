@@ -7,6 +7,12 @@ ol {
   padding: 0;
   margin: 0;
 }
+#history,
+#menu,
+#inProgress {
+  margin-left: 10px;
+  color: var(--font-dark-color-2);
+}
 .chat-list,
 .history-list {
   width: auto;
@@ -18,7 +24,7 @@ ol {
 .history-item {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px 10px 5px 0;
   border-bottom: 1px solid #ddd;
 }
 .chat-item:last-child,
@@ -29,7 +35,7 @@ ol {
   width: 40px;
   height: 40px;
   background-color: #6c757d;
-  color: white;
+  color: #fff;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -39,7 +45,8 @@ ol {
   margin-right: 10px;
 }
 #user.avatar {
-  background-color: #28a745;
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
 .chat-details,
@@ -69,7 +76,7 @@ aside {
   top: 0;
   width: 250px;
   height: 100vh;
-  background: white;
+  background: #fff;
   transition: left 0.3s ease-in-out;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 }
@@ -81,7 +88,7 @@ aside.open {
 }
 aside.open section#user-info {
   margin-bottom: 10px;
-  justify-content: center;
+  justify-content: end;
 }
 
 /* Estilizar o botão do menu */
@@ -96,6 +103,37 @@ aside.open section#user-info {
   z-index: 1000;
 }
 
+#user-info {
+  background-color: #28a745;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+button.logout {
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+}
+button.logout:hover {
+  transform: none;
+}
+button.logout img {
+  width: 20px;
+  height: 20px;
+}
+
+.nav button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav button img {
+  width: 30px;
+  height: 30px;
+}
 /* Esconder o botão em telas maiores */
 @media (min-width: 768px) {
   .menu-toggle {
@@ -104,7 +142,7 @@ aside.open section#user-info {
 
   aside {
     position: static;
-    width: auto;
+    min-width: 20vw;
   }
 }
 
@@ -134,5 +172,11 @@ aside.open section#user-info {
   }
   #client-info {
     margin-left: 15px;
+  }
+  aside.open {
+    width: 50vw;
+  }
+  aside.open .mix {
+    width: 60%;
   }
 }
