@@ -10,8 +10,10 @@ import { Message } from '@/models/message.model';
   providedIn: 'root',
 })
 export class UsersService {
-  private readonly apiUrl = 'http://localhost:3000';
+  private readonly apiUrl = 'https://backend-cyan-rho-70.vercel.app';
+
   constructor(private readonly http: HttpClient) {}
+
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/user/login`, { email, password });
   }
