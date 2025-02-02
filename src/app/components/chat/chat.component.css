@@ -58,7 +58,6 @@ header {
 .chat-input {
   display: flex;
   padding: 8px;
-  border-top: 1px solid #ccc;
 }
 
 .chat-input input {
@@ -69,7 +68,7 @@ header {
   outline: none;
 }
 
-.chat-input button {
+.chat-input button.send {
   background-color: #78d35c;
   color: white;
   border: none;
@@ -120,5 +119,9 @@ button.update-contact {
   #client-info {
     margin-left: 50px;
     flex-wrap: wrap;
+  }
+
+  header {
+    justify-content: center;
   }
 }

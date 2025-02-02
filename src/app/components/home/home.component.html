@@ -34,7 +34,7 @@
           aria-label="Editar Usuário"
         >
           <img src="assets/edit-user.png" alt="Editar Usuário" />
-          <span class="m-3 text-black">Editar Usuário</span>
+          <span class="m-3 text-black">Listar e Editar Usuários</span>
         </button>
       </div>
       }@else{
@@ -120,6 +120,8 @@
       [tickets]="tickets"
       [ticket]="ticket"
       [contact]="contact"
+      [messagesChatId]="messagesChatId"
+      (chatFinished)="onChatFinished($event)"
     ></app-chat>
     <app-welcome *ngIf="!contact._id && typeForm === ''"></app-welcome>
   </section>

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Ticket } from '@/models/ticke.model';
 import { Contact } from '@/models/contact.model';
 import { User } from '@/models/user.model';
+import { Message } from '@/models/message.model';
 
 @Injectable({
   providedIn: 'root',
@@ -53,6 +54,14 @@ export class UsersService {
     return this.http.get(this.apiUrl + '/user/name/' + name);
   }
 
+  updateUser(id: string, user: User): Observable<User> {
+    return this.http.put<User>(this.apiUrl + '/user/' + id, user);
+  }
+
+  delete(id: string): Observable<User> {
+    return this.http.delete<User>(this.apiUrl + '/user/' + id);
+  }
+
   getTicketsByAgentAndStatus(
     userId: string,
     status: string
@@ -66,12 +75,14 @@ export class UsersService {
       this.apiUrl + '/ticket/' + userId + '/agent'
     );
   }
-  delete(id: string): Observable<User> {
-    return this.http.delete<User>(this.apiUrl + '/user/' + id);
+
+  updateTicket(id: string, ticket: Ticket): Observable<Ticket> {
+    return this.http.put<Ticket>(this.apiUrl + '/ticket/' + id, ticket);
   }
 
-  updateUser(id: string, user: User): Observable<User> {
-    return this.http.put<User>(this.apiUrl + '/user/' + id, user);
+  getTicketById(id: string): Observable<Ticket> {
+    this.getMessagesByChatId(id);
+    return this.http.get<Ticket>(this.apiUrl + '/ticket/' + id);
   }
 
   updateContact(id: string, contact: any): Observable<any> {
@@ -85,11 +96,21 @@ export class UsersService {
     return this.http.get<Contact[]>(this.apiUrl + '/contact/');
   }
 
-  updateTicket(id: string, ticket: Ticket): Observable<Ticket> {
-    return this.http.put<Ticket>(this.apiUrl + '/ticket/' + id, ticket);
+  getMessagesByChatId(chatId: string): Observable<Message[]> {
+    return this.http.get<Message[]>(
+      this.apiUrl + '/chat/' + chatId + '/messages'
+    );
   }
 
-  getTicketById(id: string): Observable<Ticket> {
-    return this.http.get<Ticket>(this.apiUrl + '/ticket/' + id);
+  sendMessage(
+    sender: string,
+    message: string,
+    chatId: string
+  ): Observable<void> {
+    return this.http.post<void>(this.apiUrl + '/chat/message', {
+      sender,
+      message,
+      chatId,
+    });
   }
 }

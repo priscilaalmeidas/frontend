@@ -34,3 +34,10 @@ button img {
   width: 20px;
   height: 20px;
 }
+
+/* Alteração em telas menores */
+@media (max-width: 768px) {
+  header {
+    justify-content: center;
+  }
+}

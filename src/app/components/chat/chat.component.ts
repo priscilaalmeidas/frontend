@@ -1,4 +1,5 @@
 import { Contact } from '@/models/contact.model';
+import { Message } from '@/models/message.model';
 import { Ticket } from '@/models/ticke.model';
 import { UsersService } from '@/users/users.service';
 import { CommonModule } from '@angular/common';
@@ -6,11 +7,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-chat',
@@ -24,16 +27,30 @@ export class ChatComponent {
   @Input() tickets: Ticket[] = [];
   @Input() ticket!: Ticket;
   @Input() contact!: Contact;
-  messages = [{ text: 'Preciso de ajuda com meu pedido.', type: 'received' }];
-  newMessage = '';
+  @Input() messagesChatId: Message[] = [];
+  @Output() chatFinished = new EventEmitter<Ticket>();
+  messages: Message[] = [];
+  newMessageContact = '';
+  newMessageUser = '';
   contactClient: Contact = {} as Contact;
   editingContact = false;
+  userId: string = '';
 
   @ViewChild('chatBox') chatBox!: ElementRef;
   constructor(
     private readonly userService: UsersService,
     private readonly cdr: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    this.userId = this.userService.getUser()._id;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ticket'] && this.ticket._id) {
+      this.loadMessages();
+    }
+  }
 
   getUserInitials(name: string): string {
     if (!name) return '';
@@ -43,11 +60,38 @@ export class ChatComponent {
       nameParts.length > 1 ? nameParts[1].charAt(0).toUpperCase() : '';
     return firstInitial + secondInitial;
   }
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push({ text: this.newMessage, type: 'sent' });
-      this.newMessage = '';
-      setTimeout(() => this.scrollToBottom(), 10);
+
+  loadMessages(): void {
+    this.userService
+      .getMessagesByChatId(this.ticket._id)
+      .subscribe((messages) => {
+        this.messages = messages;
+        this.scrollToBottom();
+      });
+  }
+
+  sendMessage(idOrName: string, sender: string): void {
+    let newMessage =
+      sender === 'user' ? this.newMessageUser : this.newMessageContact;
+    if (newMessage.trim()) {
+      this.userService
+        .sendMessage(idOrName, newMessage, this.ticket._id)
+        .subscribe(() => {
+          this.messages.push({
+            message: newMessage,
+            sender: idOrName,
+            chatId: this.ticket._id,
+            timestamp: new Date().toString(),
+          });
+
+          if (sender === 'user') {
+            this.newMessageUser = '';
+          } else {
+            this.newMessageContact = '';
+          }
+          this.loadMessages();
+          setTimeout(() => this.scrollToBottom(), 10);
+        });
     }
   }
 
@@ -58,8 +102,10 @@ export class ChatComponent {
 
   finishChat() {
     this.messages.push({
-      text: 'A Positivo S+ agradece a atenção, até mais!',
-      type: 'sent',
+      message: 'A Positivo S+ agradece a atenção, até mais!',
+      sender: this.userId,
+      chatId: this.ticket._id,
+      timestamp: new Date().toString(),
     });
     setTimeout(() => this.scrollToBottom(), 10);
   }
@@ -70,6 +116,11 @@ export class ChatComponent {
       .subscribe(() => {
         ticket.status = status;
       });
+    const updatedTicket = {
+      ...this.ticket,
+      status: status,
+    };
+    this.chatFinished.emit(updatedTicket);
   }
 
   updateContact(contact: Contact): void {

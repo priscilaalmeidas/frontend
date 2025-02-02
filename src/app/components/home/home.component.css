@@ -145,6 +145,9 @@ button.history-item {
     position: static;
     min-width: 20vw;
   }
+  aside.open {
+    width: 50vw;
+  }
 }
 
 /* Alteração em telas menores */
@@ -179,5 +182,11 @@ button.history-item {
   }
   aside.open .mix {
     width: 60%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  aside {
+    width: 50vw;
   }
 }

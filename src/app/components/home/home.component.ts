@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs';
 import { User } from '@/models/user.model';
 import { Ticket } from '@/models/ticke.model';
 import { Contact } from '@/models/contact.model';
+import { Message } from '@/models/message.model';
 
 @Component({
   selector: 'app-home',
@@ -34,11 +35,14 @@ export class HomeComponent {
   userId: string = '';
   ticketsByAgent: Ticket[] = [];
   completedTickets: Ticket[] = [];
-
+  messagesChatId: Message[] = [];
   localUser: any;
   typeForm: string = '';
 
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   getDuration(ticket: Ticket): string {
     if (!ticket?.createdAt || !ticket?.updatedAt) return '';
@@ -88,6 +92,14 @@ export class HomeComponent {
       });
   }
 
+  onChatFinished(ticket: Ticket): void {
+    this.ticketsByAgent = this.ticketsByAgent.filter(
+      (t) => t._id !== ticket._id
+    );
+    this.completedTickets = [...this.completedTickets, ticket];
+    this.cdr.detectChanges();
+  }
+
   logout() {
     this.userService.logout();
     window.location.href = '/login';
@@ -131,6 +143,12 @@ export class HomeComponent {
       )
       .subscribe((contact) => {
         this.contact = contact;
+        this.loadMessagesForTicket(ticketId);
       });
+  }
+  loadMessagesForTicket(ticketId: string): void {
+    this.userService.getMessagesByChatId(ticketId).subscribe((messages) => {
+      this.messagesChatId = messages;
+    });
   }
 }

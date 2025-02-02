@@ -55,7 +55,11 @@
         {{ ticket.status === "in_progress" ? "Em andamento" : "Concluído" }}
       </div>
       <div class="source m-1">
-        <img src="assets/{{ ticket.channel }}.png" alt="WhatsApp" />
+        <img
+          src="assets/{{ ticket.channel }}.png"
+          alt="{{ ticket.channel }}"
+          title="{{ ticket.channel }}"
+        />
       </div>
     </div>
   </header>
@@ -63,32 +67,57 @@
     <div
       *ngFor="let msg of messages"
       [ngClass]="{
-        received: msg.type === 'received',
-        sent: msg.type === 'sent'
+        received: msg.sender == contact.name,
+        sent: msg.sender === userId
       }"
     >
-      {{ msg.text }}
+      {{ msg.message }}
     </div>
   </div>
   @if(ticket.status === "in_progress"){
-  <div class="chat-input">
-    <input
-      [(ngModel)]="newMessage"
-      (keyup.enter)="sendMessage()"
-      placeholder="Digite sua mensagem..."
-    />
-    <button (click)="sendMessage()">Enviar</button>
-  </div>
-  <div class="border-0 p-2 d-flex justify-content-end">
-    <button
-      type="button"
-      (click)="finishChat()"
-      class="btn-finish btn btn-outline-danger"
-      data-bs-toggle="modal"
-      data-bs-target="#finishChatModal"
+  <div class="border-top chat d-flex">
+    <div class="chat-input d-block" style="height: fit-content; width: 40vw">
+      <p>Simulação Cliente</p>
+      <div class="d-flex">
+        <input
+          [(ngModel)]="newMessageContact"
+          (keyup.enter)="sendMessage(contact.name, 'contact')"
+          placeholder="Digite sua mensagem..."
+        />
+        <button class="send" (click)="sendMessage(contact.name, 'contact')">
+          Enviar
+        </button>
+      </div>
+    </div>
+    <div
+      class="border-start justify-content-between sender-user"
+      style="width: 40vw"
     >
-      Encerrar atendimento
-    </button>
+      <div class="chat-input d-block">
+        <p>Atendente</p>
+        <div class="d-flex">
+          <input
+            [(ngModel)]="newMessageUser"
+            (keyup.enter)="sendMessage(userId, 'user')"
+            placeholder="Digite sua mensagem..."
+          />
+          <button class="send" (click)="sendMessage(userId, 'user')">
+            Enviar
+          </button>
+        </div>
+        <div class="border-0 pt-2 d-flex justify-content-end">
+          <button
+            type="button"
+            (click)="finishChat()"
+            class="btn-finish btn btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#finishChatModal"
+          >
+            Encerrar atendimento
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
   }
   <div
