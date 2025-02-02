@@ -62,8 +62,12 @@
     <button type="submit" class="w-100">Cadastrar</button>
   </form>
 </section>
-<section *ngIf="typeForm === 'edit'" style="height: 50vh">
-  <div class="d-flex justify-content-center m-3">
+<section
+  class="overflow-y-auto"
+  *ngIf="typeForm === 'edit' || typeForm === 'list'"
+  [ngStyle]="{ height: typeForm === 'list' ? '75vh' : '50vh' }"
+>
+  <div *ngIf="typeForm === 'edit'" class="d-flex justify-content-center m-3">
     <input
       type="text"
       class="form-control w-50"
@@ -83,21 +87,27 @@
       Buscar
     </button>
   </div>
-  <table class="table w-75 mx-auto mt-3" *ngIf="filteredUsers.length > 0">
-    <thead>
+  <table
+    class="table table-striped w-75 mx-auto mt-3"
+    *ngIf="filteredUsers.length > 0"
+  >
+    <thead class="table-light" style="position: sticky; top: 0; z-index: 2">
       <tr>
         <th>Nome</th>
         <th>E-mail</th>
-        <th>Perfil</th>
-        <th>Ação</th>
+        <th *ngIf="typeForm === 'list'">Telefone</th>
+        <th *ngIf="typeForm === 'edit'">Perfil</th>
+        <th *ngIf="typeForm === 'edit'">Ação</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="typeForm === 'edit'">
       <tr *ngFor="let user of filteredUsers">
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
-        <td class="text-capitalize">{{ user.role }}</td>
-        <td>
+        <td *ngIf="typeForm === 'edit'" class="text-capitalize">
+          {{ user.role }}
+        </td>
+        <td *ngIf="typeForm === 'edit'">
           <button
             class="btn btn-sm btn-outline-secondary me-2"
             (click)="editUser(user)"
@@ -108,6 +118,13 @@
             <img src="assets/white-trash.png" titel="Deletar" alt="Deletar" />
           </button>
         </td>
+      </tr>
+    </tbody>
+    <tbody *ngIf="typeForm === 'list'">
+      <tr *ngFor="let contact of contacts">
+        <td>{{ contact.name }}</td>
+        <td>{{ contact.email }}</td>
+        <td>{{ contact.phone }}</td>
       </tr>
     </tbody>
   </table>

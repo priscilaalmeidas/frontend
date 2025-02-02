@@ -79,6 +79,32 @@ header {
   cursor: pointer;
 }
 
+button.edit-contact {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.update-contact {
+  background-color: #78d35c;
+  color: white;
+  border: none;
+  padding: 8px;
+  margin-left: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.input-bottom-border {
+  border: none;
+  border-bottom: 1px solid #696868;
+  outline: none;
+  width: 100%;
+  background: transparent;
+}
+
 /* Alteração em telas menores */
 @media (max-width: 768px) {
   .avatar {

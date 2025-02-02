@@ -5,6 +5,10 @@ import { CommonModule } from '@angular/common';
 import { UsersService } from '@/users/users.service';
 import { WelcomeComponent } from '../welcome/welcome.component';
 import { UserFormComponent } from '../user-form/user-form.component';
+import { switchMap } from 'rxjs';
+import { User } from '@/models/user.model';
+import { Ticket } from '@/models/ticke.model';
+import { Contact } from '@/models/contact.model';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +17,7 @@ import { UserFormComponent } from '../user-form/user-form.component';
     ChatComponent,
     WelcomeComponent,
     UserFormComponent,
+    ChatComponent,
     FormsModule,
     CommonModule,
   ],
@@ -20,22 +25,33 @@ import { UserFormComponent } from '../user-form/user-form.component';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
+  ticket: Ticket = {} as Ticket;
+  contact: Contact = {} as Contact;
   menuOpen: boolean = false;
-  user: any;
-  tickets: any[] = [];
+  user: User = {} as User;
+  tickets: Ticket[] = [];
+  ticketId: string = '';
   userId: string = '';
-  status: string = 'in_progress';
-  ticketsByAgent: any[] = [];
-  contact: { id: string; name?: string; email?: string; phone?: string } = {
-    id: '',
-    name: '',
-    email: '',
-    phone: '',
-  };
+  ticketsByAgent: Ticket[] = [];
+  completedTickets: Ticket[] = [];
+
   localUser: any;
   typeForm: string = '';
 
   constructor(private readonly userService: UsersService) {}
+
+  getDuration(ticket: Ticket): string {
+    if (!ticket?.createdAt || !ticket?.updatedAt) return '';
+    const start = new Date(ticket.createdAt);
+    const end = new Date(ticket.updatedAt);
+    const diff = Math.abs(end.getTime() - start.getTime());
+
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    return hours > 0 ? `${hours}h ${remainingMinutes}min` : `${minutes}min`;
+  }
 
   ngOnInit() {
     // Obter as informações do usuário
@@ -60,7 +76,13 @@ export class HomeComponent {
     });
 
     this.userService
-      .getTicketsByAgentAndStatus(this.userId, this.status)
+      .getTicketsByAgentAndStatus(this.userId, 'completed')
+      .subscribe((tickets) => {
+        this.completedTickets = tickets;
+      });
+
+    this.userService
+      .getTicketsByAgentAndStatus(this.userId, 'in_progress')
       .subscribe((tickets) => {
         this.ticketsByAgent = tickets;
       });
@@ -76,10 +98,15 @@ export class HomeComponent {
   }
 
   openForm(type: string) {
+    this.contact = {} as Contact;
     if (type === 'add') {
       this.typeForm = 'add';
-    } else {
+    } else if (type === 'edit') {
       this.typeForm = 'edit';
+    } else if (type === 'list') {
+      this.typeForm = 'list';
+    } else {
+      this.typeForm = '';
     }
   }
 
@@ -92,7 +119,18 @@ export class HomeComponent {
     return firstInitial + secondInitial;
   }
 
-  openChat() {
-    console.log('Abrindo chat...');
+  async openChat(ticketId: string): Promise<void> {
+    this.typeForm = '';
+    this.userService
+      .getTicketById(ticketId)
+      .pipe(
+        switchMap((ticket) => {
+          this.ticket = ticket;
+          return this.userService.getContact(ticket.contact._id);
+        })
+      )
+      .subscribe((contact) => {
+        this.contact = contact;
+      });
   }
 }

@@ -60,6 +60,14 @@ button {
   }
 }
 
+.button-unset {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 li img {
   width: 25px;
   height: 25px;

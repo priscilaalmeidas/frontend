@@ -4,10 +4,10 @@
   <aside [class.open]="menuOpen" class="d-flex flex-column">
     <section id="user-info" class="d-flex p-2">
       <div class="mix d-flex align-items-center">
-        <div id="user" class="avatar">{{ getUserInitials(user?.name) }}</div>
+        <div id="user" class="avatar">{{ getUserInitials(user.name) }}</div>
         <div class="user-details">
-          <div class="name text-capitalize">{{ user?.name }}</div>
-          <div class="role text-capitalize">{{ user?.role }}</div>
+          <div class="name text-capitalize">{{ user.name }}</div>
+          <div class="role text-capitalize">{{ user.role }}</div>
         </div>
       </div>
       <button class="logout" (click)="logout()">
@@ -15,7 +15,7 @@
       </button>
     </section>
     <nav id="menu" class="mb-2">
-      @if(user?.role == 'gestor'){
+      @if(user.role == 'gestor'){
       <h6 class="mt-4">Gerenciamento de Usuários</h6>
       <div class="nav d-flex flex-column mb-4">
         <button
@@ -36,14 +36,24 @@
           <img src="assets/edit-user.png" alt="Editar Usuário" />
           <span class="m-3 text-black">Editar Usuário</span>
         </button>
-        <!-- <button type="button" aria-label="Remover Usuário">
-          <img src="assets/remove-user.png" alt="Remover Usuário" />
-        </button> -->
       </div>
       }@else{
-      <h6>Canais</h6>
-      <ul class="d-flex justify-content-around w-50">
-        <!-- Fazer v-for de itens registrados no banco -->
+      <h6 class="mt-4">Contatos</h6>
+      <div class="nav d-flex flex-column mb-4">
+        <button
+          type="button"
+          class="align-items-center d-flex justify-content-start"
+          (click)="openForm('list')"
+          aria-label="Listar Contato"
+        >
+          <img src="assets/contact.png" alt="Listar Contato" />
+          <span class="m-3 text-black">Listar Contatos</span>
+        </button>
+      </div>
+
+      <!-- <h6 class="mt-4">Canais</h6>
+      <ul class="d-flex justify-content-around mb-3 w-50">
+       
         <li>
           <img src="assets/whatsapp.png" alt="WhatsApp" />
         </li>
@@ -53,69 +63,49 @@
         <li>
           <img src="assets/web-chat.png" alt="WebChat" />
         </li>
-      </ul>
+      </ul> -->
       }
     </nav>
-    @if(user?.role == 'atendente'){
+    @if(user.role == 'atendente'){
     <section id="inProgress">
       <h6>Atendimentos em Andamento</h6>
       <div class="chat-list">
-        <div
-          class="chat-item"
+        <button
+          class="chat-item mb-2"
           *ngFor="let ticket of this.ticketsByAgent"
-          (click)="openChat()"
+          (click)="openChat(ticket._id)"
           tabindex="0"
-          role="button"
         >
-          <div class="avatar">{{ getUserInitials(ticket?.contact?.name) }}</div>
+          <div class="avatar">{{ getUserInitials(ticket.contact.name) }}</div>
           <div class="chat-details">
             <div class="name">
               {{ ticket.contact.name }}
-              <span class="duration" title="Duração"
-                >• {{ ticket.duration }}</span
-              >
             </div>
             <div class="last-message">{{ ticket.lastMessage }}</div>
           </div>
-        </div>
+        </button>
       </div>
     </section>
     <section id="history">
       <h6>Histórico de Atendimentos</h6>
       <div class="history-list">
-        <div class="history-item">
+        <button
+          class="history-item mb-2"
+          *ngFor="let ticket of this.completedTickets"
+          (click)="openChat(ticket._id)"
+        >
           <div class="history-details">
             <div class="name">
-              Lucas Almeida
-              <span class="duration" title="Duração">• 20 min</span>
+              {{ ticket.contact.name }}
+              <span class="duration" title="Duração"
+                >• {{ getDuration(ticket) }}</span
+              >
             </div>
             <div class="source" title="Origem">
-              <img src="assets/whatsapp.png" alt="WhatsApp" />
+              <img src="assets/{{ ticket.channel }}.png" alt="WhatsApp" />
             </div>
           </div>
-        </div>
-        <div class="history-item">
-          <div class="history-details">
-            <div class="name">
-              Carla Figueiredo
-              <span class="duration" title="Duração">• 12 min</span>
-            </div>
-            <div class="source" title="Origem">
-              <img src="assets/telegram.png" alt="Telegram" />
-            </div>
-          </div>
-        </div>
-        <div class="history-item">
-          <div class="history-details">
-            <div class="name">
-              Marcelo Vieira
-              <span class="duration" title="Duração">• 8 min</span>
-            </div>
-            <div class="source" title="Origem">
-              <img src="assets/web-chat.png" alt="Web Chat" />
-            </div>
-          </div>
-        </div>
+        </button>
       </div>
     </section>
     }
@@ -123,11 +113,14 @@
   <section class="d-flex flex-column w-100">
     <app-user-form
       [typeForm]="typeForm"
-      *ngIf="!contact.id && typeForm"
+      *ngIf="!contact._id && typeForm"
     ></app-user-form>
-    <app-chat *ngIf="contact.id && !typeForm"></app-chat>
-    <app-welcome
-      *ngIf="!(contact.id && !typeForm) && !(typeForm && !contact.id)"
-    ></app-welcome>
+    <app-chat
+      *ngIf="contact._id && !typeForm"
+      [tickets]="tickets"
+      [ticket]="ticket"
+      [contact]="contact"
+    ></app-chat>
+    <app-welcome *ngIf="!contact._id && typeForm === ''"></app-welcome>
   </section>
 </main>

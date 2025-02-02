@@ -1,27 +1,61 @@
 <div class="chat-container">
   <header class="d-flex justify-content-between p-2">
     <div id="client-info" class="d-flex align-items-center w-75">
-      <div class="avatar">JD</div>
       <div class="d-flex flex-column w-100">
-        <div class="name m-1">
-          João da Silva
-          <img
-            src="assets/pencil.png"
-            alt="Editar"
-            style="width: 15px; height: 15px"
-          />
+        <div class="info-contact d-flex align-items-center mb-2">
+          <div class="avatar">{{ getUserInitials(contact.name) }}</div>
+          <div class="name m-1">
+            {{ contact.name }}
+            <button
+              class="edit-contact"
+              (click)="editingContact = !editingContact"
+            >
+              <img
+                src="assets/pencil.png"
+                alt="Editar"
+                style="width: 15px; height: 15px"
+              />
+            </button>
+          </div>
         </div>
-        <div class="user-details d-flex flex-wrap justify-content-between">
+        <div class="user-details d-flex flex-wrap justify-content-around">
           <div class="role">Cliente</div>
-          <div>Telefone: (11) 9999-9999</div>
-          <div>E-mail: joaodasilvaemail.com</div>
+          <div>
+            Telefone:
+            <input
+              type="text"
+              class="input-bottom-border"
+              [(ngModel)]="contact.phone"
+              [hidden]="!editingContact"
+            />
+            <span [hidden]="editingContact">{{ contact.phone }}</span>
+          </div>
+          <div>
+            E-mail:
+            <input
+              type="text"
+              class="input-bottom-border"
+              [(ngModel)]="contact.email"
+              [hidden]="!editingContact"
+            />
+            <span [hidden]="editingContact">{{ contact.email }}</span>
+          </div>
+          <button
+            class="update-contact align-self-end"
+            [hidden]="!editingContact"
+            (click)="updateContact(contact)"
+          >
+            Salvar
+          </button>
         </div>
       </div>
     </div>
     <div class="d-flex align-items-center w-25 justify-content-end">
-      <div class="status m-1">Em atendimento</div>
+      <div class="status m-1">
+        {{ ticket.status === "in_progress" ? "Em andamento" : "Concluído" }}
+      </div>
       <div class="source m-1">
-        <img src="assets/whatsapp.png" alt="WhatsApp" />
+        <img src="assets/{{ ticket.channel }}.png" alt="WhatsApp" />
       </div>
     </div>
   </header>
@@ -36,7 +70,7 @@
       {{ msg.text }}
     </div>
   </div>
-
+  @if(ticket.status === "in_progress"){
   <div class="chat-input">
     <input
       [(ngModel)]="newMessage"
@@ -44,9 +78,61 @@
       placeholder="Digite sua mensagem..."
     />
     <button (click)="sendMessage()">Enviar</button>
-    <!-- (click)="endChat()" -->
   </div>
-  <div class="chat-input border-0 d-flex justify-content-end">
-    <a class="btn btn-outline-danger">Encerrar atendimento</a>
+  <div class="border-0 p-2 d-flex justify-content-end">
+    <button
+      type="button"
+      (click)="finishChat()"
+      class="btn-finish btn btn-outline-danger"
+      data-bs-toggle="modal"
+      data-bs-target="#finishChatModal"
+    >
+      Encerrar atendimento
+    </button>
+  </div>
+  }
+  <div
+    class="modal fade"
+    id="finishChatModal"
+    tabindex="-1"
+    aria-labelledby="finishChatModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="finishChatModalLabel">
+            Finalizar atendimento
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja finalizar?</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Não
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            (click)="updateTicket(ticket, 'completed')"
+          >
+            Sim
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

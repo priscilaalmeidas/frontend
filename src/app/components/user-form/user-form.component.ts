@@ -1,3 +1,5 @@
+import { Contact } from '@/models/contact.model';
+import { User } from '@/models/user.model';
 import { UsersService } from '@/users/users.service';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
@@ -13,10 +15,11 @@ export class UserFormComponent {
   @Input() typeForm: string = '';
   currentSection: string = '';
   user_id: string = '';
-  users: any[] = [];
-  filteredUsers: any[] = [];
-  user: any = {};
-  selectedUser: any = null;
+  users: User[] = [];
+  filteredUsers: User[] = [];
+  user: User = {} as User;
+  contacts: Contact[] = [];
+  selectedUser: User = {} as User;
 
   constructor(private readonly userService: UsersService) {}
 
@@ -24,6 +27,9 @@ export class UserFormComponent {
     this.userService.getUsers().subscribe((users) => {
       this.users = users;
       this.filteredUsers = [...this.users];
+    });
+    this.userService.getAllContact().subscribe((contact) => {
+      this.contacts = contact;
     });
   }
 
@@ -41,12 +47,12 @@ export class UserFormComponent {
     this.currentSection = section;
   }
 
-  editUser(user: any): void {
+  editUser(user: User): void {
     this.typeForm = 'edit';
     this.selectedUser = { ...user };
   }
 
-  remove(user: any): void {
+  remove(user: User): void {
     this.userService.delete(user._id).subscribe(
       () => {
         this.users = this.users.filter((u) => u._id !== user._id);
@@ -61,7 +67,7 @@ export class UserFormComponent {
     alert('Usuário removido com sucesso!');
   }
 
-  updateUser(user: any): void {
+  updateUser(user: User): void {
     this.userService.updateUser(user._id, user).subscribe(
       () => {
         this.users = this.users.map((u) => (u._id === user._id ? user : u));
@@ -73,18 +79,17 @@ export class UserFormComponent {
         console.error('Erro ao atualizar o usuário', error);
       }
     );
-    this.selectedUser = null;
+    this.selectedUser = {} as User;
     alert('Usuário atualizado com sucesso!');
   }
 
   editCancel(): void {
-    this.selectedUser = null;
-    console.log(this.typeForm);
+    this.selectedUser = {} as User;
   }
 
   onSubmit(form: any): void {
     this.userService.createUser(form.value).subscribe(() => {});
     alert('Usuário criado com sucesso!');
-    this.user = {};
+    this.user = {} as User;
   }
 }

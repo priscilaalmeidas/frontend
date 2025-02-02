@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Ticket } from '@/models/ticke.model';
+import { Contact } from '@/models/contact.model';
+import { User } from '@/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +25,7 @@ export class UsersService {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  getUser(): any {
+  getUser(): User {
     return JSON.parse(localStorage.getItem('user') || '{}');
   }
 
@@ -34,35 +37,59 @@ export class UsersService {
     return !!this.getToken();
   }
 
-  createUser(user: any): Observable<any> {
-    return this.http.post(this.apiUrl + '/user', user);
+  createUser(user: User): Observable<User> {
+    return this.http.post<User>(this.apiUrl + '/user', user);
   }
 
-  getUsers(): Observable<any> {
-    return this.http.get(this.apiUrl + '/user');
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.apiUrl + '/user');
   }
 
-  getUserById(id: string): Observable<any> {
-    return this.http.get(this.apiUrl + '/user/' + id);
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(this.apiUrl + '/user/' + id);
   }
 
   getUserByName(name: string): Observable<any> {
     return this.http.get(this.apiUrl + '/user/name/' + name);
   }
 
-  getTicketsByAgentAndStatus(userId: string, status: string): Observable<any> {
-    return this.http.get(
+  getTicketsByAgentAndStatus(
+    userId: string,
+    status: string
+  ): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(
       this.apiUrl + '/ticket/' + userId + '/agent/' + status + '/status'
     );
   }
-  getTicketsByAgent(userId: string): Observable<any> {
-    return this.http.get(this.apiUrl + '/ticket/' + userId + '/agent');
+  getTicketsByAgent(userId: string): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(
+      this.apiUrl + '/ticket/' + userId + '/agent'
+    );
   }
-  delete(id: string): Observable<any> {
-    return this.http.delete(this.apiUrl + '/user/' + id);
+  delete(id: string): Observable<User> {
+    return this.http.delete<User>(this.apiUrl + '/user/' + id);
   }
 
-  updateUser(id: string, user: any): Observable<any> {
-    return this.http.put(this.apiUrl + '/user/' + id, user);
+  updateUser(id: string, user: User): Observable<User> {
+    return this.http.put<User>(this.apiUrl + '/user/' + id, user);
+  }
+
+  updateContact(id: string, contact: any): Observable<any> {
+    return this.http.put(this.apiUrl + '/contact/' + id, contact);
+  }
+
+  getContact(id: string): Observable<Contact> {
+    return this.http.get<Contact>(this.apiUrl + '/contact/' + id);
+  }
+  getAllContact(): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.apiUrl + '/contact/');
+  }
+
+  updateTicket(id: string, ticket: Ticket): Observable<Ticket> {
+    return this.http.put<Ticket>(this.apiUrl + '/ticket/' + id, ticket);
+  }
+
+  getTicketById(id: string): Observable<Ticket> {
+    return this.http.get<Ticket>(this.apiUrl + '/ticket/' + id);
   }
 }

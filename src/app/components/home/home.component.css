@@ -122,7 +122,9 @@ button.logout img {
   height: 20px;
 }
 
-.nav button {
+.nav button,
+button.chat-item,
+button.history-item {
   all: unset;
   cursor: pointer;
   display: inline-flex;
@@ -139,7 +141,6 @@ button.logout img {
   .menu-toggle {
     display: none;
   }
-
   aside {
     position: static;
     min-width: 20vw;
