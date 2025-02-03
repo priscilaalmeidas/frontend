@@ -10,7 +10,7 @@ import { Message } from '@/models/message.model';
   providedIn: 'root',
 })
 export class UsersService {
-  private readonly apiUrl = 'https://backend-cyan-rho-70.vercel.app';
+  private readonly apiUrl = 'https://18.219.189.116:3000';
 
   constructor(private readonly http: HttpClient) {}
 
